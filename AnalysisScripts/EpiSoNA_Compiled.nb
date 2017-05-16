@@ -1,0 +1,2471 @@
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[         0,          0]
+NotebookDataLength[    138724,       2470]
+NotebookOptionsPosition[    134602,       2361]
+NotebookOutlinePosition[    134962,       2377]
+CellTagsIndexPosition[    134919,       2374]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["\<\
+
+(*::Package::*)
+(*MathematicaPackage*)
+(*H\[EAcute]ctor Manuel S\[AAcute]nchez Castellanos*)
+(*sanchez.hmsc@gmail.com*)
+(*Created by the Wolfram Workbench Nov 20,2014*)
+(*Last edited on: Mon 4 Jul 2016 18:04:10*)
+
+BeginPackage[\"EpiSoNA`\"]
+edgeShape::usage = \"Default style parameters for graphs edges\"
+VertexNumberToVertexSyllable::usage = \"Converts a vertex number to a label\"
+GraphTransitionsFrequencies::usage = \"Generates a graph with the edges \
+corresponding to transition frequencies between phrases and the vertices to \
+the phrases\"
+GraphTransitionsFrequenciesWithMax::usage = \"Generates a transitions graph \
+which colors are scaled to the value entered as MAX (used for processes that \
+change with time (manipulates))\"
+EdgesStyleList2::usage = \"Generates the edges style list of a graph\"
+SCEIRInitializePersonsVectors::usage = \"Returns the initialized state \
+vectors with the given indexes cases\"
+SCEIRInitializeCounterVectors::usage = \"Returns the initialized count \
+vectors with zero values for each of them\"
+SCEIRInitializeVectors::usage = \"Initializes both vectors\"
+SCEIRUpdateCounters::usage = \"Updates the counters for each of the \
+individuals in each state\"
+SCEIRTransitionState::usage = \"Returns the positions of the individuals that \
+should make a transition given a state and threshold for counter\"
+SCEIRGenerateContagionMatrix::usage = \"Returns the bool values of the \
+probabilities of an individual infecting the others without taking into \
+account if the individual is himself in Infected state\"
+SCEIRGeneratePopulationContagionsMatrix::usage = \"Returns the matrix of the \
+individuals being infected (columns) by others (rows)\"
+SCEIRUpdatePersonsVectorWithCondemnedIndividuals::usage = \"Returns the \
+updated population vector with the replaced condemned individuals\"
+SCEIRSpreadDisease::usage = \"Spreads the disease between contacts \
+probabilistically according to their contacts matrices\"
+SCEIRRunEpidemicEpoch::usage = \"Spread a disease through one epoch between \
+the population in a network\"
+SCEIRNetworkEpidemicListEpochs::usage = \"Spreads a disease in a network \
+returning the persons and counter vectors for each epoch\"
+SCEIRNetworkEpidemic::usage = \"Spread a disease in a network returning the \
+persons and counter vectors for the last epoch\"
+SCEIRGenerateListPlotLists::usage = \"Returns the epidemic process lists so \
+that they can be plotted\"
+SCEIRGraphEpidemicProcess::usage = \"Generates a graph of each step of the \
+epidemic process\"
+SCEIRListPlotEpidemicProcess::usage = \"Generates a list plot of each step of \
+the epidemic process\"
+SCEIRMatrixPlots::usage = \"Generates a Matrix Plot representation of each of \
+the states in the epidemic process\"
+SCEIRGenerateMatrixPlotMatrices::usage = \"Generates a full condensed matrix \
+for a matrix plot of the epidemic process\"
+SEIRInitializePersonsVectors::usage = \"\"
+SEIRInitializeCounterVectors::usage = \"\"
+SEIRInitializeVectors::usage = \"\"
+SEIRUpdateCounters::usage = \"\"
+SEIRTransitionState::usage = \"\"
+SEIRGenerateContagionMatrix::usage = \"\"
+SEIRGeneratePopulationContagionsMatrix::usage = \"\"
+SEIRUpdatePersonsVectorWithCondemnedIndividuals::usage = \"\"
+SEIRSpreadDisease::usage = \"\"
+SEIRRunEpidemicEpoch::usage = \"\"
+SEIRNetworkEpidemicListEpochs::usage = \"\"
+SEIRNetworkEpidemic::usage = \"\"
+SEIRGraphEpidemicProcess::usage = \"\"
+SEIRGenerateListPlotLists::usage = \"\"
+SEIRListPlotEpidemicProcess::usage = \"\"
+SEIRGenerateMatrixPlotMatrices::usage = \"\"
+SIRInitializePersonsVectors::usage = \"\"
+SIRInitializeCounterVectors::usage = \"\"
+SIRInitializeVectors::usage = \"\"
+SIRUpdateCounters::usage = \"\"
+SIRTransitionState::usage = \"\"
+SIRGenerateContagionMatrix::usage = \"\"
+SIRGeneratePopulationContagionsMatrix::usage = \"\"
+SIRUpdatePersonsVectorWithCondemnedIndividuals::usage = \"\"
+SIRSpreadDisease::usage = \"\"
+SIRRunEpidemicEpoch::usage = \"\"
+SIRNetworkEpidemicListEpochs::usage = \"\"
+SIRNetworkEpidemic::usage = \"\"
+SIRGraphEpidemicProcess::usage = \"\"
+SIRGenerateListPlotLists::usage = \"\"
+SIRListPlotEpidemicProcess::usage = \"\"
+SIRGenerateMatrixPlotMatrices::usage = \"\"
+SISInitializePersonsVectors::usage = \"\"
+SISInitializeCounterVectors::usage = \"\"
+SISInitializeVectors::usage = \"\"
+SISUpdateCounters::usage = \"\"
+SISTransitionState::usage = \"\"
+SISGenerateContagionMatrix::usage = \"\"
+SISGeneratePopulationContagionsMatrix::usage = \"\"
+SISUpdatePersonsVectorWithCondemnedIndividuals::usage = \"\"
+SISSpreadDisease::usage = \"\"
+SISRunEpidemicEpoch::usage = \"\"
+SISNetworkEpidemicListEpochs::usage = \"\"
+SISNetworkEpidemic::usage = \"\"
+SISGraphEpidemicProcess::usage = \"\"
+SISGenerateListPlotLists::usage = \"\"
+SISListPlotEpidemicProcess::usage = \"\"
+SISGenerateMatrixPlotMatrices::usage = \"\"
+NetworkEpidemicListEpochsRepeatOnIndexes::usage = \"Repeats an epidemic \
+process a given number of times with a single set of initial infected \
+individuals\"
+NetworkEpidemicListEpochsRepeatSweep::usage = \"Repeats an epidemic process a \
+given number of times starting from each individual on the population\"
+ListPlotRepeatOnIndexes::usage = \"Generates a list plot from the data \
+resulting of a sweep on the epidemic population\"
+MatrixPlotRepeatOnIndexes::usage = \"Generates a matrix plot from the data \
+resulting of a sweep on the epidemic population\"
+Summary::usage = \"\"
+NetworkEpidemicListEpochs::usage = \"Simulates an epidemic returning the \
+stages of the process\"
+GenerateListPlotLists::usage = \"Generates the list plots lists of the \
+process\"
+ListPlotEpidemic::usage = \"Generates the final list plot of the process\"
+GenerateMatrixPlotMatrix::usage = \"Generates the final matrix of the process\"
+MatrixPlotEpidemic::usage = \"Generates the final matrix plot\"
+GraphEpidemicProcess::usage = \"Generates the graphs of each stage of the \
+epidemic process\"
+ListPlotEpidemicProcess::usage = \"List plots an epidemic process in each \
+stage\"
+MatrixPlotEpidemicProcess::usage = \"Generates the matrix plots at each stage \
+of the process\"
+Begin[\"`Private`\"]
+edgeShape[e_,___]:={Arrowheads[.00001],Arrow[e]};
+VertexNumberToVertexSyllable[syllables_, fixedEdgesList_] := Table[ \
+DirectedEdge[syllables[[fixedEdgesList[[index]][[1]][[1]]]], \
+syllables[[fixedEdgesList[[index]][[1]][[2]]]] -> \
+fixedEdgesList[[index]][[2]]] // N, {index, 1, Length[fixedEdgesList]}]
+Options[EdgesStyleList2] := {LineThickness -> .004, VariableStyle -> \
+\"Both\"}
+EdgesStyleList2[vertexSyllableList_, OptionsPattern[]] := 
+ \tSwitch[OptionValue[VariableStyle],
+  \t\t\"LineColor\", Table[DirectedEdge[vertexSyllableList[[i]][[1]][[1]], \
+vertexSyllableList[[i]][[1]][[2]]] -> {Hue[.85*vertexSyllableList[[i]][[2]] + \
+.15], Thickness[OptionValue[LineThickness]]}, {i, 1, \
+Length[vertexSyllableList]}],
+  \t\t\"LineWidth\", Table[DirectedEdge[vertexSyllableList[[i]][[1]][[1]], \
+vertexSyllableList[[i]][[1]][[2]]] -> \
+{Thickness[vertexSyllableList[[i]][[2]]*OptionValue[LineThickness]]}, {i, 1, \
+Length[vertexSyllableList]}],
+  \t\t\"Both\", Table[DirectedEdge[vertexSyllableList[[i]][[1]][[1]], \
+vertexSyllableList[[i]][[1]][[2]]] -> {Hue[.85*vertexSyllableList[[i]][[2]] + \
+.15], Thickness[vertexSyllableList[[i]][[2]]*OptionValue[LineThickness]]},{i, \
+1, Length[vertexSyllableList]}], 
+  \t\t_, Table[DirectedEdge[vertexSyllableList[[i]][[1]][[1]], \
+vertexSyllableList[[i]][[1]][[2]]] -> \
+{Thickness[OptionValue[LineThickness]]}, {i, 1, Length[vertexSyllableList]}]
+  \t]
+Options[GraphTransitionsFrequencies] := {LineThickness -> .0075, \
+VariableStyle -> \"Both\", GraphLayout -> Automatic, ImageSize -> Automatic, \
+VertexSize -> .5, EdgeShapeFunction -> edgeShape, VertexLabelStyle -> {Italic}}
+GraphTransitionsFrequencies[frequenciesOutput_, OptionsPattern[]] := \
+Module[{frequencies, syllables, max, edges, fixedEdgesList, \
+vertexSyllableList, normalizedVertexSyllableList,edgesStyleList, links},
+  \tfrequencies = frequenciesOutput[[1]];
+  \tsyllables = frequenciesOutput[[2]];
+  \tmax = frequencies // Flatten // Max;
+  \tedges = Table[DirectedEdge[i, j] -> frequencies[[i, j]], {i, \
+Length[syllables]}, {j, Length[syllables]}] // Flatten;
+  \tfixedEdgesList = DeleteCases[edges, DirectedEdge[_, _] -> 0];
+  \tvertexSyllableList = VertexNumberToVertexSyllable[frequenciesOutput[[2]], \
+fixedEdgesList];
+\tnormalizedVertexSyllableList = (DirectedEdge[#[[1]], #[[2]][[1]]] -> \
+#[[2]][[2]]/max &) /@ vertexSyllableList;
+  \tedgesStyleList = EdgesStyleList2[normalizedVertexSyllableList, \
+LineThickness -> OptionValue[LineThickness], VariableStyle -> \
+OptionValue[VariableStyle]];
+  \tlinks = DirectedEdge[#[[1]], #[[2, 1]]] & /@ vertexSyllableList;
+  \tGraph[syllables, links, EdgeStyle -> edgesStyleList, ImageSize -> \
+OptionValue[ImageSize], GraphLayout -> OptionValue[GraphLayout], \
+EdgeShapeFunction -> OptionValue[EdgeShapeFunction], VertexSize -> \
+OptionValue[VertexSize], VertexLabelStyle -> OptionValue[VertexLabelStyle], \
+VertexLabels -> Placed[\"Name\", Center],EdgeLabels -> Table[links[[i]] -> \
+Placed[fixedEdgesList[[All, 2]][[i]], Tooltip], {i, Length[links]}]]
+]
+Options[GraphTransitionsFrequenciesWithMax] := {VertexCoordinates-> \
+Automatic, LineThickness -> .0075, VariableStyle -> \"Both\", GraphLayout -> \
+Automatic, ImageSize -> Automatic, VertexSize -> .5, EdgeShapeFunction -> \
+edgeShape, VertexLabelStyle -> {Italic}}
+GraphTransitionsFrequenciesWithMax[frequenciesOutput_, max_, \
+OptionsPattern[]] := Module[{frequencies, syllables, edges, fixedEdgesList, \
+vertexSyllableList, normalizedVertexSyllableList,edgesStyleList, links},
+  \tfrequencies = frequenciesOutput[[1]];
+  \tsyllables = frequenciesOutput[[2]];
+   \tedges = Table[DirectedEdge[i, j] -> frequencies[[i, j]], {i, \
+Length[syllables]}, {j, Length[syllables]}] // Flatten;
+  \tfixedEdgesList = DeleteCases[edges, DirectedEdge[_, _] -> 0];
+  \tvertexSyllableList = VertexNumberToVertexSyllable[frequenciesOutput[[2]], \
+fixedEdgesList];
+\tnormalizedVertexSyllableList = (DirectedEdge[#[[1]], #[[2]][[1]]] -> \
+#[[2]][[2]]/max &) /@ vertexSyllableList;
+  \tedgesStyleList = EdgesStyleList2[normalizedVertexSyllableList, \
+LineThickness -> OptionValue[LineThickness], VariableStyle -> \
+OptionValue[VariableStyle]];
+  \tlinks = DirectedEdge[#[[1]], #[[2, 1]]] & /@ vertexSyllableList;
+  \tGraph[syllables, links, EdgeStyle -> edgesStyleList, VertexCoordinates-> \
+OptionValue[VertexCoordinates], ImageSize -> OptionValue[ImageSize], \
+GraphLayout -> OptionValue[GraphLayout], EdgeShapeFunction -> \
+OptionValue[EdgeShapeFunction], VertexSize -> OptionValue[VertexSize], \
+VertexLabelStyle -> OptionValue[VertexLabelStyle], VertexLabels -> \
+Placed[\"Name\", Center],EdgeLabels -> Table[links[[i]] -> \
+Placed[fixedEdgesList[[All, 2]][[i]], Tooltip], {i, Length[links]}]]
+]
+SCEIRInitializePersonsVectors[indexesCases_,populationSize_]:= \
+Module[{sPersonsVct,cPersonsVct,ePersonsVct,iPersonsVct,rPersonsVct},
+\tsPersonsVct=ConstantArray[1,populationSize]//ReplacePart[#,#[[1]]->#[[2]]&/@\
+({indexesCases,ConstantArray[0,indexesCases//Length]}//Transpose)]&;
+\tcPersonsVct=ConstantArray[0,populationSize];
+\tePersonsVct=ConstantArray[0,populationSize];
+\tiPersonsVct=ConstantArray[0,populationSize]//ReplacePart[#,#[[1]]->#[[2]]&/@\
+({indexesCases,ConstantArray[1,indexesCases//Length]}//Transpose)]&;
+\trPersonsVct=ConstantArray[0,populationSize];
+\t{sPersonsVct*(1-iPersonsVct),cPersonsVct,ePersonsVct,iPersonsVct,rPersonsVct}
+]
+SCEIRInitializeCounterVectors[populationSize_]:= \
+Module[{sCounterVct,cCounterVct,eCounterVct,iCounterVct,rCounterVct},
+\tsCounterVct=ConstantArray[0,populationSize];
+\tcCounterVct=ConstantArray[0,populationSize];
+\teCounterVct=ConstantArray[0,populationSize];
+\tiCounterVct=ConstantArray[0,populationSize];
+\trCounterVct=ConstantArray[0,populationSize];
+\t{sCounterVct,cCounterVct,eCounterVct,iCounterVct,rCounterVct}
+]
+SCEIRInitializeVectors[indexesCases_,populationSize_]:={\
+SCEIRInitializePersonsVectors[indexesCases,populationSize],\
+SCEIRInitializeCounterVectors[populationSize]}
+SCEIRUpdateCounters[personsVcts_,counterVcts_]:={personsVcts,personsVcts+\
+counterVcts}
+SCEIRTransitionState[personsVcts_,counterVcts_,threshold_,stateIndex_]:=\
+Module[{affectedPersons,affectedCounters,intersection,personsReplacement0,\
+personsReplacement1,personsVctsReplaced},
+\t(*Get indexes of interest*)
+\taffectedPersons=Position[personsVcts[[stateIndex]],1];
+\taffectedCounters=Position[counterVcts[[stateIndex]],a_/;a>=threshold];
+\tintersection=Intersection[affectedPersons,affectedCounters]//Flatten;
+\t(*Replace in persons vectors section*)
+\tpersonsReplacement0=ReplacePart[personsVcts[[stateIndex]],(#->0)&/@\
+intersection];
+\tpersonsReplacement1=ReplacePart[personsVcts[[stateIndex+1]],(#->1)&/@\
+intersection];
+\t(*Replace in persons vector*)
+\tpersonsVctsReplaced=ReplacePart[personsVcts,{stateIndex->\
+personsReplacement0,(stateIndex+1)->personsReplacement1}];
+\t(*Return vectors*)
+\t{personsVctsReplaced,counterVcts}
+]
+SCEIRGenerateContagionMatrix[contactsMatrix_,infectionProb_,populationSize_]:=\
+Module[{contagionProbabilites,randomMatrix},
+\tcontagionProbabilites=1-infectionProb^contactsMatrix;
+\trandomMatrix=RandomReal[{0,1},{populationSize,populationSize}];
+\tMap[Map[If[#[[1]]>#[[2]],1,0]&,#//Transpose]&,{contagionProbabilites,\
+randomMatrix}//Transpose]
+]
+SCEIRGeneratePopulationContagionsMatrix[personsVcts_,contagionMatrix_]:=\
+Module[{suceptible,infective,infMatrix,sucMatrix},
+\tsuceptible=personsVcts[[1]];
+\tinfective=personsVcts[[4]];
+\tinfMatrix=infective*contagionMatrix;
+\tsucMatrix=(suceptible*(contagionMatrix//Transpose))//Transpose;
+\tinfMatrix*sucMatrix
+]
+SCEIRUpdatePersonsVectorWithCondemnedIndividuals[condemnedMatrix_,personsVcts_\
+,counterVcts_]:=Module[{condemnedIndividuals,suceptibles,condemned},
+\tcondemnedIndividuals=Position[Total/@(condemnedMatrix//Transpose),a_/;a>= 1];
+\tsuceptibles=ReplacePart[personsVcts[[1]],#[[1]]->0&/@condemnedIndividuals];
+\tcondemned=ReplacePart[personsVcts[[2]],#[[1]]->1&/@condemnedIndividuals];
+\t{ReplacePart[personsVcts,{1->suceptibles,2->condemned}],counterVcts}
+]
+SCEIRSpreadDisease[contactsMatrix_,infectionProb_,personsVcts_,counterVcts_]:=\
+Module[{contagionMatrix,condemnedMatrix},
+\tcontagionMatrix=SCEIRGenerateContagionMatrix[contactsMatrix,infectionProb,\
+contactsMatrix//Length];
+\tcondemnedMatrix=SCEIRGeneratePopulationContagionsMatrix[personsVcts,\
+contagionMatrix];
+\tSCEIRUpdatePersonsVectorWithCondemnedIndividuals[condemnedMatrix,\
+personsVcts,counterVcts]
+]
+SCEIRRunEpidemicEpoch[personsVctsIn_,counterVctsIn_,thresholds_,\
+infectionProbability_,contactsMatrix_]:=Module[{personsVcts=personsVctsIn,\
+counterVcts=counterVctsIn,infectionProb=infectionProbability},
+\t(*UpdateCounters*)
+\t{personsVcts,counterVcts}=SCEIRUpdateCounters[personsVcts,counterVcts];
+\t(*TransitionBetweenStates(C\[Rule]E\[Rule]I\[Rule]R)*)
+\t{personsVcts,counterVcts}=SCEIRTransitionState[personsVcts,counterVcts,\
+thresholds[[2]],2];
+\t{personsVcts,counterVcts}=SCEIRTransitionState[personsVcts,counterVcts,\
+thresholds[[3]],3];
+\t{personsVcts,counterVcts}=SCEIRTransitionState[personsVcts,counterVcts,\
+thresholds[[4]],4];
+\t(*ContagionProcess*)
+\t{personsVcts,counterVcts}=SCEIRSpreadDisease[contactsMatrix,infectionProb,\
+personsVcts,counterVcts];
+\t(*ReturnValues*)
+\t{personsVcts,counterVcts,thresholds,infectionProbability,contactsMatrix}
+]
+SCEIRNetworkEpidemicListEpochs[thresholds_,infectionProb_,contactsMatrix_,\
+indexesCases_,epochs_]:=Module[{personsVcts,counterVcts,output},
+\t{personsVcts,counterVcts}=SCEIRInitializeVectors[indexesCases,\
+contactsMatrix//Length];
+\toutput=NestList[Apply[SCEIRRunEpidemicEpoch,#]&,{personsVcts,counterVcts,\
+thresholds,infectionProb,contactsMatrix},epochs];
+\t{output[[All,1]],output[[All,2]]}
+]
+SCEIRNetworkEpidemic[thresholds_,infectionProb_,contactsMatrix_,indexesCases_,\
+epochs_]:=Module[{personsVcts,counterVcts,output},
+\t{personsVcts,counterVcts}=SCEIRInitializeVectors[indexesCases,\
+contactsMatrix//Length];
+\toutput=Nest[Apply[SCEIRRunEpidemicEpoch,#]&,{personsVcts,counterVcts,\
+thresholds,infectionProb,contactsMatrix},epochs];
+\t{output[[1]],output[[2]]}
+]
+edgesShape[e_,___]:={Arrowheads[{{.01,.75}}],Arrow[e]};
+Options[SCEIRGraphEpidemicProcess]:={LineThickness->.0075,VariableStyle->\"\
+Both\",GraphLayout->Automatic,ImageSize->Automatic,VertexSize->.5,\
+EdgeShapeFunction->edgesShape,VertexLabelStyle->{Italic}}
+SCEIRGraphEpidemicProcess[contactsMatrix_,epidemic_,OptionsPattern[]]:=Module[\
+{graph=contactsMatrix,positions,development},
+\tpositions=Map[ToString/@((Position[#,1]//Flatten))&,epidemic[[1]],{2}];
+\tgraph=GraphTransitionsFrequencies[{contactsMatrix,ToString/@Range[\
+contactsMatrix//Length]},LineThickness->OptionValue[LineThickness],ImageSize->\
+OptionValue[ImageSize],GraphLayout->OptionValue[GraphLayout],\
+EdgeShapeFunction->OptionValue[EdgeShapeFunction],VertexSize->OptionValue[\
+VertexSize],VertexLabelStyle->OptionValue[VertexLabelStyle]];
+\tdevelopment=HighlightGraph[graph,
+\t{Style[#[[1]],Blue],Style[#[[2]],Orange],Style[#[[3]],Green],Style[#[[4]],\
+Red],Style[#[[5]],Purple]}
+\t,ImageSize->OptionValue[ImageSize],GraphLayout->OptionValue[GraphLayout],\
+EdgeShapeFunction->OptionValue[EdgeShapeFunction],VertexSize->OptionValue[\
+VertexSize],VertexLabelStyle->OptionValue[VertexLabelStyle]]&/@positions
+]
+SCEIRGenerateListPlotLists[epidemicIndividuals_]:=Map[Total,\
+epidemicIndividuals,{2}]//Transpose
+Options[SCEIRListPlotEpidemicProcess]:={Joined->True,InterpolationOrder->2,\
+ImageSize->Automatic}
+SCEIRListPlotEpidemicProcess[epidemicSCEIR_,epochs_,OptionsPattern[]]:=Table[\
+ListPlot[SCEIRGenerateListPlotLists[epidemicSCEIR[[1,1;;i]]],Joined->\
+OptionValue[Joined],ImageSize->OptionValue[ImageSize],InterpolationOrder->\
+OptionValue[InterpolationOrder],PlotRange->{{0,epochs},{0,(epidemicSCEIR[[1,1,\
+1]]//Length)+Ceiling[(epidemicSCEIR[[1,1,1]]//Length)*.25]}},PlotLegends->{\"\
+Suceptible\",\"Condemned\",\"Exposed\",\"Infected\",\"Recovered\"}]//Quiet,{i,\
+1,epidemicSCEIR[[1]]//Length}]
+SCEIRMatrixPlots[epidemicSCEIR_]:=Table[i//MatrixPlot,{i,(epidemicSCEIR[[1]]//\
+Transpose)}]
+SCEIRGenerateMatrixPlotMatrices[epidemicSCEIR_]:=Module[{suceptible,condemned,\
+exposed,infected,recovered},
+\tsuceptible=(#/.{1->0})&/@((epidemicSCEIR[[1]]//Transpose)[[1]]);
+\tcondemned=(#/.{1->1})&/@((epidemicSCEIR[[1]]//Transpose)[[2]]);
+\texposed=(#/.{1->2})&/@((epidemicSCEIR[[1]]//Transpose)[[3]]);
+\tinfected=(#/.{1->3})&/@((epidemicSCEIR[[1]]//Transpose)[[4]]);
+\trecovered=(#/.{1->4})&/@((epidemicSCEIR[[1]]//Transpose)[[5]]);
+\tTotal[{suceptible,condemned,exposed,infected,recovered}]
+]
+SEIRInitializePersonsVectors[indexesCases_,populationSize_]:= \
+Module[{sPersonsVct,ePersonsVct,iPersonsVct,rPersonsVct},
+\tsPersonsVct=ConstantArray[1,populationSize]//ReplacePart[#,#[[1]]->#[[2]]&/@\
+({indexesCases,ConstantArray[0,indexesCases//Length]}//Transpose)]&;
+\tePersonsVct=ConstantArray[0,populationSize];
+\tiPersonsVct=ConstantArray[0,populationSize]//ReplacePart[#,#[[1]]->#[[2]]&/@\
+({indexesCases,ConstantArray[1,indexesCases//Length]}//Transpose)]&;
+\trPersonsVct=ConstantArray[0,populationSize];
+\t{sPersonsVct*(1-iPersonsVct),ePersonsVct,iPersonsVct,rPersonsVct}
+]
+SEIRInitializeCounterVectors[populationSize_]:= \
+Module[{sCounterVct,eCounterVct,iCounterVct,rCounterVct},
+\tsCounterVct=ConstantArray[0,populationSize];
+\teCounterVct=ConstantArray[0,populationSize];
+\tiCounterVct=ConstantArray[0,populationSize];
+\trCounterVct=ConstantArray[0,populationSize];
+\t{sCounterVct,eCounterVct,iCounterVct,rCounterVct}
+]
+SEIRInitializeVectors[indexesCases_,populationSize_]:={\
+SEIRInitializePersonsVectors[indexesCases,populationSize],\
+SEIRInitializeCounterVectors[populationSize]}
+SEIRUpdateCounters[personsVcts_,counterVcts_]:={personsVcts,personsVcts+\
+counterVcts}
+SEIRTransitionState[personsVcts_,counterVcts_,threshold_,stateIndex_]:=Module[\
+{affectedPersons,affectedCounters,intersection,personsReplacement0,\
+personsReplacement1,personsVctsReplaced},
+\t(*Get indexes of interest*)
+\taffectedPersons=Position[personsVcts[[stateIndex]],1];
+\taffectedCounters=Position[counterVcts[[stateIndex]],a_/;a>=threshold];
+\tintersection=Intersection[affectedPersons,affectedCounters]//Flatten;
+\t(*Replace in persons vectors section*)
+\tpersonsReplacement0=ReplacePart[personsVcts[[stateIndex]],(#->0)&/@\
+intersection];
+\tpersonsReplacement1=ReplacePart[personsVcts[[stateIndex+1]],(#->1)&/@\
+intersection];
+\t(*Replace in persons vector*)
+\tpersonsVctsReplaced=ReplacePart[personsVcts,{stateIndex->\
+personsReplacement0,(stateIndex+1)->personsReplacement1}];
+\t(*Return vectors*)
+\t{personsVctsReplaced,counterVcts}
+]
+SEIRGenerateContagionMatrix[contactsMatrix_,infectionProb_,populationSize_]:=\
+Module[{contagionProbabilites,randomMatrix},
+\tcontagionProbabilites=1-infectionProb^contactsMatrix;
+\trandomMatrix=RandomReal[{0,1},{populationSize,populationSize}];
+\tMap[Map[If[#[[1]]>#[[2]],1,0]&,#//Transpose]&,{contagionProbabilites,\
+randomMatrix}//Transpose]
+]
+SEIRGeneratePopulationContagionsMatrix[personsVcts_,contagionMatrix_]:=Module[\
+{suceptible,infective,infMatrix,sucMatrix},
+\tsuceptible=personsVcts[[1]];
+\tinfective=personsVcts[[3]];
+\tinfMatrix=infective*contagionMatrix;
+\tsucMatrix=(suceptible*(contagionMatrix//Transpose))//Transpose;
+\tinfMatrix*sucMatrix
+]
+SEIRUpdatePersonsVectorWithCondemnedIndividuals[condemnedMatrix_,personsVcts_,\
+counterVcts_]:=Module[{condemnedIndividuals,suceptibles,condemned},
+\tcondemnedIndividuals=Position[Total/@(condemnedMatrix//Transpose),a_/;a>= 1];
+\tsuceptibles=ReplacePart[personsVcts[[1]],#[[1]]->0&/@condemnedIndividuals];
+\tcondemned=ReplacePart[personsVcts[[2]],#[[1]]->1&/@condemnedIndividuals];
+\t{ReplacePart[personsVcts,{1->suceptibles,2->condemned}],counterVcts}
+]
+SEIRSpreadDisease[contactsMatrix_,infectionProb_,personsVcts_,counterVcts_]:=\
+Module[{contagionMatrix,condemnedMatrix},
+\tcontagionMatrix=SEIRGenerateContagionMatrix[contactsMatrix,infectionProb,\
+contactsMatrix//Length];
+\tcondemnedMatrix=SEIRGeneratePopulationContagionsMatrix[personsVcts,\
+contagionMatrix];
+\tSEIRUpdatePersonsVectorWithCondemnedIndividuals[condemnedMatrix,personsVcts,\
+counterVcts]
+]
+SEIRRunEpidemicEpoch[personsVctsIn_,counterVctsIn_,thresholds_,\
+infectionProbability_,contactsMatrix_]:=Module[{personsVcts=personsVctsIn,\
+counterVcts=counterVctsIn,infectionProb=infectionProbability},
+\t(*UpdateCounters*)
+\t{personsVcts,counterVcts}=SEIRUpdateCounters[personsVcts,counterVcts];
+\t(*TransitionBetweenStates(E\[Rule]I\[Rule]R)*)
+\t{personsVcts,counterVcts}=SEIRTransitionState[personsVcts,counterVcts,\
+thresholds[[2]],2];
+\t{personsVcts,counterVcts}=SEIRTransitionState[personsVcts,counterVcts,\
+thresholds[[3]],3];
+\t(*ContagionProcess*)
+\t{personsVcts,counterVcts}=SEIRSpreadDisease[contactsMatrix,infectionProb,\
+personsVcts,counterVcts];
+\t(*ReturnValues*)
+\t{personsVcts,counterVcts,thresholds,infectionProbability,contactsMatrix}
+]
+SEIRNetworkEpidemicListEpochs[thresholds_,infectionProb_,contactsMatrix_,\
+indexesCases_,epochs_]:=Module[{personsVcts,counterVcts,output},
+\t{personsVcts,counterVcts}=SEIRInitializeVectors[indexesCases,contactsMatrix/\
+/Length];
+\toutput=NestList[Apply[SEIRRunEpidemicEpoch,#]&,{personsVcts,counterVcts,\
+thresholds,infectionProb,contactsMatrix},epochs];
+\t{output[[All,1]],output[[All,2]]}
+]
+SEIRNetworkEpidemic[thresholds_,infectionProb_,contactsMatrix_,indexesCases_,\
+epochs_]:=Module[{personsVcts,counterVcts,output},
+\t{personsVcts,counterVcts}=SEIRInitializeVectors[indexesCases,contactsMatrix/\
+/Length];
+\toutput=Nest[Apply[SCEIRRunEpidemicEpoch,#]&,{personsVcts,counterVcts,\
+thresholds,infectionProb,contactsMatrix},epochs];
+\t{output[[1]],output[[2]]}
+]
+edgesShape[e_,___]:={Arrowheads[{{.01,.75}}],Arrow[e]};
+Options[SEIRGraphEpidemicProcess]:={LineThickness->.0075,VariableStyle->\"\
+Both\",GraphLayout->Automatic,ImageSize->Automatic,VertexSize->.5,\
+EdgeShapeFunction->edgesShape,VertexLabelStyle->{Italic}}
+SEIRGraphEpidemicProcess[contactsMatrix_,epidemic_,OptionsPattern[]]:=Module[{\
+graph=contactsMatrix,positions,development},
+\tpositions=Map[ToString/@((Position[#,1]//Flatten))&,epidemic[[1]],{2}];
+\tgraph=GraphTransitionsFrequencies[{contactsMatrix,ToString/@Range[\
+contactsMatrix//Length]},LineThickness->OptionValue[LineThickness],ImageSize->\
+OptionValue[ImageSize],GraphLayout->OptionValue[GraphLayout],\
+EdgeShapeFunction->OptionValue[EdgeShapeFunction],VertexSize->OptionValue[\
+VertexSize],VertexLabelStyle->OptionValue[VertexLabelStyle]];
+\tdevelopment=HighlightGraph[graph,
+\t{Style[#[[1]],Blue],Style[#[[2]],Orange],Style[#[[3]],Green],Style[#[[4]],\
+Red]}
+\t,ImageSize->OptionValue[ImageSize],GraphLayout->OptionValue[GraphLayout],\
+EdgeShapeFunction->OptionValue[EdgeShapeFunction],VertexSize->OptionValue[\
+VertexSize],VertexLabelStyle->OptionValue[VertexLabelStyle]]&/@positions
+]
+SEIRGenerateListPlotLists[epidemicIndividuals_]:=Map[Total,\
+epidemicIndividuals,{2}]//Transpose
+Options[SEIRListPlotEpidemicProcess]:={Joined->True,InterpolationOrder->2,\
+ImageSize->Automatic}
+SEIRListPlotEpidemicProcess[epidemicSCEIR_,epochs_,OptionsPattern[]]:=Table[\
+ListPlot[SEIRGenerateListPlotLists[epidemicSCEIR[[1,1;;i]]],Joined->\
+OptionValue[Joined],ImageSize->OptionValue[ImageSize],InterpolationOrder->\
+OptionValue[InterpolationOrder],PlotRange->{{0,epochs},{0,(epidemicSCEIR[[1,1,\
+1]]//Length)+Ceiling[(epidemicSCEIR[[1,1,1]]//Length)*.25]}},PlotLegends->{\"\
+Suceptible\",\"Exposed\",\"Infected\",\"Recovered\"}]//Quiet,{i,1,\
+epidemicSCEIR[[1]]//Length}]
+SEIRGenerateMatrixPlotMatrices[epidemicSCEIR_]:=Module[{suceptible,exposed,\
+infected,recovered},
+\tsuceptible=(#/.{1->0})&/@((epidemicSCEIR[[1]]//Transpose)[[1]]);
+\texposed=(#/.{1->1})&/@((epidemicSCEIR[[1]]//Transpose)[[2]]);
+\tinfected=(#/.{1->2})&/@((epidemicSCEIR[[1]]//Transpose)[[3]]);
+\trecovered=(#/.{1->3})&/@((epidemicSCEIR[[1]]//Transpose)[[4]]);
+\tTotal[{suceptible,exposed,infected,recovered}]
+]
+SIRInitializePersonsVectors[indexesCases_,populationSize_]:= \
+Module[{sPersonsVct,cPersonsVct,ePersonsVct,iPersonsVct,rPersonsVct},
+\tsPersonsVct=ConstantArray[1,populationSize]//ReplacePart[#,#[[1]]->#[[2]]&/@\
+({indexesCases,ConstantArray[0,indexesCases//Length]}//Transpose)]&;
+\tiPersonsVct=ConstantArray[0,populationSize]//ReplacePart[#,#[[1]]->#[[2]]&/@\
+({indexesCases,ConstantArray[1,indexesCases//Length]}//Transpose)]&;
+\trPersonsVct=ConstantArray[0,populationSize];
+\t{sPersonsVct*(1-iPersonsVct),iPersonsVct,rPersonsVct}
+]
+SIRInitializeCounterVectors[populationSize_]:= \
+Module[{sCounterVct,cCounterVct,eCounterVct,iCounterVct,rCounterVct},
+\tsCounterVct=ConstantArray[0,populationSize];
+\tiCounterVct=ConstantArray[0,populationSize];
+\trCounterVct=ConstantArray[0,populationSize];
+\t{sCounterVct,iCounterVct,rCounterVct}
+]
+SIRInitializeVectors[indexesCases_,populationSize_]:={\
+SIRInitializePersonsVectors[indexesCases,populationSize],\
+SIRInitializeCounterVectors[populationSize]}
+SIRUpdateCounters[personsVcts_,counterVcts_]:={personsVcts,personsVcts+\
+counterVcts}
+SIRTransitionState[personsVcts_,counterVcts_,threshold_,stateIndex_]:=Module[{\
+affectedPersons,affectedCounters,intersection,personsReplacement0,\
+personsReplacement1,personsVctsReplaced},
+\t(*Get indexes of interest*)
+\taffectedPersons=Position[personsVcts[[stateIndex]],1];
+\taffectedCounters=Position[counterVcts[[stateIndex]],a_/;a>=threshold];
+\tintersection=Intersection[affectedPersons,affectedCounters]//Flatten;
+\t(*Replace in persons vectors section*)
+\tpersonsReplacement0=ReplacePart[personsVcts[[stateIndex]],(#->0)&/@\
+intersection];
+\tpersonsReplacement1=ReplacePart[personsVcts[[stateIndex+1]],(#->1)&/@\
+intersection];
+\t(*Replace in persons vector*)
+\tpersonsVctsReplaced=ReplacePart[personsVcts,{stateIndex->\
+personsReplacement0,(stateIndex+1)->personsReplacement1}];
+\t(*Return vectors*)
+\t{personsVctsReplaced,counterVcts}
+]
+SIRGenerateContagionMatrix[contactsMatrix_,infectionProb_,populationSize_]:=\
+Module[{contagionProbabilites,randomMatrix},
+\tcontagionProbabilites=1-infectionProb^contactsMatrix;
+\trandomMatrix=RandomReal[{0,1},{populationSize,populationSize}];
+\tMap[Map[If[#[[1]]>#[[2]],1,0]&,#//Transpose]&,{contagionProbabilites,\
+randomMatrix}//Transpose]
+]
+SIRGeneratePopulationContagionsMatrix[personsVcts_,contagionMatrix_]:=Module[{\
+suceptible,infective,infMatrix,sucMatrix},
+\tsuceptible=personsVcts[[1]];
+\tinfective=personsVcts[[2]];
+\tinfMatrix=infective*contagionMatrix;
+\tsucMatrix=(suceptible*(contagionMatrix//Transpose))//Transpose;
+\tinfMatrix*sucMatrix
+]
+SIRUpdatePersonsVectorWithCondemnedIndividuals[condemnedMatrix_,personsVcts_,\
+counterVcts_]:=Module[{condemnedIndividuals,suceptibles,condemned},
+\tcondemnedIndividuals=Position[Total/@(condemnedMatrix//Transpose),a_/;a>= 1];
+\tsuceptibles=ReplacePart[personsVcts[[1]],#[[1]]->0&/@condemnedIndividuals];
+\tcondemned=ReplacePart[personsVcts[[2]],#[[1]]->1&/@condemnedIndividuals];
+\t{ReplacePart[personsVcts,{1->suceptibles,2->condemned}],counterVcts}
+]
+SIRSpreadDisease[contactsMatrix_,infectionProb_,personsVcts_,counterVcts_]:=\
+Module[{contagionMatrix,condemnedMatrix},
+\tcontagionMatrix=SIRGenerateContagionMatrix[contactsMatrix,infectionProb,\
+contactsMatrix//Length];
+\tcondemnedMatrix=SIRGeneratePopulationContagionsMatrix[personsVcts,\
+contagionMatrix];
+\tSIRUpdatePersonsVectorWithCondemnedIndividuals[condemnedMatrix,personsVcts,\
+counterVcts]
+]
+SIRRunEpidemicEpoch[personsVctsIn_,counterVctsIn_,thresholds_,\
+infectionProbability_,contactsMatrix_]:=Module[{personsVcts=personsVctsIn,\
+counterVcts=counterVctsIn,infectionProb=infectionProbability},
+\t(*UpdateCounters*)
+\t{personsVcts,counterVcts}=SIRUpdateCounters[personsVcts,counterVcts];
+\t(*TransitionBetweenStates(I\[Rule]R)*)
+\t{personsVcts,counterVcts}=SIRTransitionState[personsVcts,counterVcts,\
+thresholds[[2]],2];
+\t(*ContagionProcess*)
+\t{personsVcts,counterVcts}=SIRSpreadDisease[contactsMatrix,infectionProb,\
+personsVcts,counterVcts];
+\t(*ReturnValues*)
+\t{personsVcts,counterVcts,thresholds,infectionProbability,contactsMatrix}
+]
+SIRNetworkEpidemicListEpochs[thresholds_,infectionProb_,contactsMatrix_,\
+indexesCases_,epochs_]:=Module[{personsVcts,counterVcts,output},
+\t{personsVcts,counterVcts}=SIRInitializeVectors[indexesCases,contactsMatrix//\
+Length];
+\toutput=NestList[Apply[SIRRunEpidemicEpoch,#]&,{personsVcts,counterVcts,\
+thresholds,infectionProb,contactsMatrix},epochs];
+\t{output[[All,1]],output[[All,2]]}
+]
+SIRNetworkEpidemic[thresholds_,infectionProb_,contactsMatrix_,indexesCases_,\
+epochs_]:=Module[{personsVcts,counterVcts,output},
+\t{personsVcts,counterVcts}=SIRInitializeVectors[indexesCases,contactsMatrix//\
+Length];
+\toutput=Nest[Apply[SIRRunEpidemicEpoch,#]&,{personsVcts,counterVcts,\
+thresholds,infectionProb,contactsMatrix},epochs];
+\t{output[[1]],output[[2]]}
+]
+edgesShape[e_,___]:={Arrowheads[{{.00001,.75}}],Arrow[e]};
+Options[SIRGraphEpidemicProcess]:={LineThickness->.0075,VariableStyle->\"None\
+\",GraphLayout->Automatic,ImageSize->Automatic,VertexSize->10,\
+EdgeShapeFunction->edgesShape,VertexLabelStyle->{Italic}}
+SIRGraphEpidemicProcess[contactsMatrix_,epidemic_,OptionsPattern[]]:=Module[{\
+graph=contactsMatrix,positions,development},
+\tpositions=Map[ToString/@((Position[#,1]//Flatten))&,epidemic[[1]],{2}];
+\tgraph=GraphTransitionsFrequencies[{contactsMatrix,ToString/@Range[\
+contactsMatrix//Length]},VariableStyle->Options[VariableStyle],LineThickness->\
+OptionValue[LineThickness],ImageSize->OptionValue[ImageSize],GraphLayout->\
+OptionValue[GraphLayout],EdgeShapeFunction->OptionValue[EdgeShapeFunction],\
+VertexSize->OptionValue[VertexSize],VertexLabelStyle->OptionValue[\
+VertexLabelStyle]];
+\tdevelopment=HighlightGraph[graph,
+\t{Style[#[[1]],Blue],Style[#[[2]],Red],Style[#[[3]],Green]}
+\t,ImageSize->OptionValue[ImageSize],GraphLayout->OptionValue[GraphLayout],\
+EdgeShapeFunction->OptionValue[EdgeShapeFunction],VertexSize->OptionValue[\
+VertexSize],VertexLabelStyle->OptionValue[VertexLabelStyle]]&/@positions
+]
+SIRGenerateListPlotLists[epidemicIndividuals_]:=Map[Total,epidemicIndividuals,\
+{2}]//Transpose
+Options[SIRListPlotEpidemicProcess]:={Joined->True,InterpolationOrder->2,\
+ImageSize->Automatic}
+SIRListPlotEpidemicProcess[epidemicSCEIR_,epochs_,OptionsPattern[]]:=Table[\
+ListPlot[SIRGenerateListPlotLists[epidemicSCEIR[[1,1;;i]]],Joined->\
+OptionValue[Joined],ImageSize->OptionValue[ImageSize],InterpolationOrder->\
+OptionValue[InterpolationOrder],PlotRange->{{0,epochs},{0,(epidemicSCEIR[[1,1,\
+1]]//Length)+Ceiling[(epidemicSCEIR[[1,1,1]]//Length)*.25]}},PlotLegends->{\"\
+Suceptible\",\"Infected\",\"Recovered\"},PlotStyle->{Blue,Red,Green}]//Quiet,{\
+i,1,epidemicSCEIR[[1]]//Length}]
+SIRGenerateMatrixPlotMatrices[epidemicSCEIR_]:=Module[{suceptible,infected,\
+recovered},
+\tsuceptible=(#/.{1->0})&/@((epidemicSCEIR[[1]]//Transpose)[[1]]);
+\tinfected=(#/.{1->1})&/@((epidemicSCEIR[[1]]//Transpose)[[2]]);
+\trecovered=(#/.{1->2})&/@((epidemicSCEIR[[1]]//Transpose)[[3]]);
+\tTotal[{suceptible,infected,recovered}]
+]
+(* ::Package:: *)
+
+SISInitializePersonsVectors[indexesCases_,populationSize_]:= \
+Module[{sPersonsVct,cPersonsVct,ePersonsVct,iPersonsVct,rPersonsVct},
+\tsPersonsVct=ConstantArray[1,populationSize]//ReplacePart[#,#[[1]]->#[[2]]&/@\
+({indexesCases,ConstantArray[0,indexesCases//Length]}//Transpose)]&;
+\tiPersonsVct=ConstantArray[0,populationSize]//ReplacePart[#,#[[1]]->#[[2]]&/@\
+({indexesCases,ConstantArray[1,indexesCases//Length]}//Transpose)]&;
+\t{sPersonsVct*(1-iPersonsVct),iPersonsVct}
+]
+SISInitializeCounterVectors[populationSize_]:= \
+Module[{sCounterVct,cCounterVct,eCounterVct,iCounterVct,rCounterVct},
+\tsCounterVct=ConstantArray[0,populationSize];
+\tiCounterVct=ConstantArray[0,populationSize];
+\t{sCounterVct,iCounterVct}
+]
+SISInitializeVectors[indexesCases_,populationSize_]:={\
+SIRInitializePersonsVectors[indexesCases,populationSize],\
+SIRInitializeCounterVectors[populationSize]}
+SISUpdateCounters[personsVcts_,counterVcts_]:={personsVcts,personsVcts+\
+counterVcts}
+SISTransitionState[personsVcts_,counterVcts_,threshold_,stateIndex_]:=Module[{\
+affectedPersons,affectedCounters,intersection,personsReplacement0,\
+personsReplacement1,personsVctsReplaced},
+
+\t(*Get indexes of interest*)
+\taffectedPersons=Position[personsVcts[[stateIndex]],1];
+\taffectedCounters=Position[counterVcts[[stateIndex]],a_/;a>=threshold];
+\tintersection=Intersection[affectedPersons,affectedCounters]//Flatten;
+\t(*Replace in persons vectors section*)
+\tpersonsReplacement0=ReplacePart[personsVcts[[stateIndex]],(#->0)&/@\
+intersection];
+\tpersonsReplacement1=ReplacePart[personsVcts[[stateIndex-1]],(#->1)&/@\
+intersection];
+\t(*Replace in persons vector*)
+\tpersonsVctsReplaced=ReplacePart[personsVcts,{stateIndex->\
+personsReplacement0,(stateIndex-1)->personsReplacement1}];
+\t(*Return vectors*)
+\t{personsVctsReplaced,counterVcts}
+]
+SISGenerateContagionMatrix[contactsMatrix_,infectionProb_,populationSize_]:=\
+Module[{contagionProbabilites,randomMatrix},
+\tcontagionProbabilites=1-infectionProb^contactsMatrix;
+\trandomMatrix=RandomReal[{0,1},{populationSize,populationSize}];
+\tMap[Map[If[#[[1]]>#[[2]],1,0]&,#//Transpose]&,{contagionProbabilites,\
+randomMatrix}//Transpose]
+]
+SISGeneratePopulationContagionsMatrix[personsVcts_,contagionMatrix_]:=Module[{\
+suceptible,infective,infMatrix,sucMatrix},
+\tsuceptible=personsVcts[[1]];
+\tinfective=personsVcts[[2]];
+\tinfMatrix=infective*contagionMatrix;
+\tsucMatrix=(suceptible*(contagionMatrix//Transpose))//Transpose;
+\tinfMatrix*sucMatrix
+]
+SISUpdatePersonsVectorWithCondemnedIndividuals[condemnedMatrix_,personsVcts_,\
+counterVcts_]:=Module[{condemnedIndividuals,suceptibles,condemned},
+\tcondemnedIndividuals=Position[Total/@(condemnedMatrix//Transpose),a_/;a>= 1];
+\tsuceptibles=ReplacePart[personsVcts[[1]],#[[1]]->0&/@condemnedIndividuals];
+\tcondemned=ReplacePart[personsVcts[[2]],#[[1]]->1&/@condemnedIndividuals];
+\t{ReplacePart[personsVcts,{1->suceptibles,2->condemned}],counterVcts}
+]
+SISSpreadDisease[contactsMatrix_,infectionProb_,personsVcts_,counterVcts_]:=\
+Module[{contagionMatrix,condemnedMatrix},
+\tcontagionMatrix=SISGenerateContagionMatrix[contactsMatrix,infectionProb,\
+contactsMatrix//Length];
+\tcondemnedMatrix=SISGeneratePopulationContagionsMatrix[personsVcts,\
+contagionMatrix];
+\tSISUpdatePersonsVectorWithCondemnedIndividuals[condemnedMatrix,personsVcts,\
+counterVcts]
+]
+SISRunEpidemicEpoch[personsVctsIn_,counterVctsIn_,thresholds_,\
+infectionProbability_,contactsMatrix_]:=Module[{personsVcts=personsVctsIn,\
+counterVcts=counterVctsIn,infectionProb=infectionProbability},
+\t(*UpdateCounters*)
+\t{personsVcts,counterVcts}=SISUpdateCounters[personsVcts,counterVcts];
+\t(*TransitionBetweenStates(I\[Rule]R)*)
+\t{personsVcts,counterVcts}=SISTransitionState[personsVcts,counterVcts,\
+thresholds[[2]],2];
+\t(*ContagionProcess*)
+\t{personsVcts,counterVcts}=SISSpreadDisease[contactsMatrix,infectionProb,\
+personsVcts,counterVcts];
+\t(*ReturnValues*)
+\t{personsVcts,counterVcts,thresholds,infectionProbability,contactsMatrix}
+]
+SISNetworkEpidemicListEpochs[thresholds_,infectionProb_,contactsMatrix_,\
+indexesCases_,epochs_]:=Module[{personsVcts,counterVcts,output},
+\t{personsVcts,counterVcts}=SISInitializeVectors[indexesCases,contactsMatrix//\
+Length];
+\toutput=NestList[Apply[SISRunEpidemicEpoch,#]&,{personsVcts,counterVcts,\
+thresholds,infectionProb,contactsMatrix},epochs];
+\t{output[[All,1]],output[[All,2]]}
+]
+SISNetworkEpidemic[thresholds_,infectionProb_,contactsMatrix_,indexesCases_,\
+epochs_]:=Module[{personsVcts,counterVcts,output},
+\t{personsVcts,counterVcts}=SIRInitializeVectors[indexesCases,contactsMatrix//\
+Length];
+\toutput=Nest[Apply[SIRRunEpidemicEpoch,#]&,{personsVcts,counterVcts,\
+thresholds,infectionProb,contactsMatrix},epochs];
+\t{output[[1]],output[[2]]}
+]
+edgesShape[e_,___]:={Arrowheads[{{.00001,.75}}],Arrow[e]};
+Options[SISGraphEpidemicProcess]:={LineThickness->.0075,VariableStyle->\"Both\
+\",GraphLayout->Automatic,ImageSize->Automatic,VertexSize->3,\
+EdgeShapeFunction->edgesShape,VertexLabelStyle->{Italic}}
+SISGraphEpidemicProcess[contactsMatrix_,epidemic_,OptionsPattern[]]:=Module[{\
+graph=contactsMatrix,positions,development},
+\tpositions=Map[ToString/@((Position[#,1]//Flatten))&,epidemic[[1]],{2}];
+\tgraph=GraphTransitionsFrequencies[{contactsMatrix,ToString/@Range[\
+contactsMatrix//Length]},LineThickness->OptionValue[LineThickness],ImageSize->\
+OptionValue[ImageSize],GraphLayout->OptionValue[GraphLayout],\
+EdgeShapeFunction->OptionValue[EdgeShapeFunction],VertexSize->OptionValue[\
+VertexSize],VertexLabelStyle->OptionValue[VertexLabelStyle]];
+\tdevelopment=HighlightGraph[graph,
+\t{Style[#[[1]],Blue],Style[#[[2]],Green],Style[#[[3]],Purple]}
+\t,ImageSize->OptionValue[ImageSize],GraphLayout->OptionValue[GraphLayout],\
+EdgeShapeFunction->OptionValue[EdgeShapeFunction],VertexSize->OptionValue[\
+VertexSize],VertexLabelStyle->OptionValue[VertexLabelStyle]]&/@positions
+]
+SISGenerateListPlotLists[epidemicIndividuals_]:=Map[Total,epidemicIndividuals,\
+{2}]//Transpose
+Options[SISListPlotEpidemicProcess]:={Joined->True,InterpolationOrder->2,\
+ImageSize->Automatic}
+SISListPlotEpidemicProcess[epidemicSCEIR_,epochs_,OptionsPattern[]]:=Table[\
+ListPlot[SISGenerateListPlotLists[epidemicSCEIR[[1,1;;i]]],Joined->\
+OptionValue[Joined],ImageSize->OptionValue[ImageSize],InterpolationOrder->\
+OptionValue[InterpolationOrder],PlotRange->{{0,epochs},{0,(epidemicSCEIR[[1,1,\
+1]]//Length)+Ceiling[(epidemicSCEIR[[1,1,1]]//Length)*.25]}},PlotLegends->{\"\
+Suceptible\",\"Infected\"},PlotStyle->{Blue,Green}]//Quiet,{i,1,epidemicSCEIR[\
+[1]]//Length}]
+SISGenerateMatrixPlotMatrices[epidemicSCEIR_]:=Module[{suceptible,infected,\
+recovered},
+\tsuceptible=(#/.{1->-10})&/@((epidemicSCEIR[[1]]//Transpose)[[1]]);
+\tinfected=(#/.{1->5})&/@((epidemicSCEIR[[1]]//Transpose)[[2]]);
+\trecovered=(#/.{1->10})&/@((epidemicSCEIR[[1]]//Transpose)[[3]]);
+\tTotal[{suceptible,infected,recovered}]
+]     
+NetworkEpidemicListEpochsRepeatOnIndexes[thresholds_,infectionProb_,\
+contactsMatrixEpidemic_,indexesCases_,epochs_,epidemicType_,repetitions_,\
+mixFunction_]:=Module[{sweep,min,mean,max,epidemicData,maxI,meanI,minI,maxC,\
+meanC,minC},
+\tsweep=Table[NetworkEpidemicListEpochs[thresholds,infectionProb,\
+contactsMatrixEpidemic,indexesCases,epochs,epidemicType],{i,1,repetitions}];
+\tepidemicData={sweep[[All,1]],sweep[[All,2]]};
+\tmaxI=Table[(Max/@(epidemicData[[1,All,#]][[All,i]]//Transpose))&/@Range[\
+epochs],{i,1,epidemicData[[1,All,1]][[1]]//Length}];
+\tmeanI=Table[(mixFunction/@(epidemicData[[1,All,#]][[All,i]]//Transpose))&/@\
+Range[epochs],{i,1,epidemicData[[1,All,1]][[1]]//Length}];
+\tminI=Table[(Min/@(epidemicData[[1,All,#]][[All,i]]//Transpose))&/@Range[\
+epochs],{i,1,epidemicData[[1,All,1]][[1]]//Length}];
+\tmaxC=Table[(Max/@(epidemicData[[2,All,#]][[All,i]]//Transpose))&/@Range[\
+epochs],{i,1,epidemicData[[1,All,1]][[1]]//Length}];
+\tmeanC=Table[(mixFunction/@(epidemicData[[2,All,#]][[All,i]]//Transpose))&/@\
+Range[epochs],{i,1,epidemicData[[1,All,1]][[1]]//Length}];
+\tminC=Table[(Min/@(epidemicData[[2,All,#]][[All,i]]//Transpose))&/@Range[\
+epochs],{i,1,epidemicData[[1,All,1]][[1]]//Length}];
+\t{{minI//Transpose,minC//Transpose},{meanI//Transpose,meanC//Transpose},{\
+maxI//Transpose,maxC//Transpose}}
+]
+NetworkEpidemicListEpochsRepeatSweep[thresholds_,infectionProb_,\
+contactsMatrixEpidemic_,epochs_,epidemicType_,repetitions_,mixFunction_]:=\
+Module[{sweep,min,mean,max,epidemicData,maxI,meanI,minI,maxC,meanC,minC},
+\tTable[
+\t\tsweep=Table[NetworkEpidemicListEpochs[thresholds,infectionProb,\
+contactsMatrixEpidemic,{j},epochs,epidemicType],{i,1,repetitions}];
+\t\tepidemicData={sweep[[All,1]],sweep[[All,2]]};
+\t\tmaxI=Table[(Max/@(epidemicData[[1,All,#]][[All,i]]//Transpose))&/@Range[\
+epochs],{i,1,epidemicData[[1,All,1]][[1]]//Length}];
+\t\tmeanI=Table[(mixFunction/@(epidemicData[[1,All,#]][[All,i]]//Transpose))&/\
+@Range[epochs],{i,1,epidemicData[[1,All,1]][[1]]//Length}];
+\t\tminI=Table[(Min/@(epidemicData[[1,All,#]][[All,i]]//Transpose))&/@Range[\
+epochs],{i,1,epidemicData[[1,All,1]][[1]]//Length}];
+\t\tmaxC=Table[(Max/@(epidemicData[[2,All,#]][[All,i]]//Transpose))&/@Range[\
+epochs],{i,1,epidemicData[[1,All,1]][[1]]//Length}];
+\t\tmeanC=Table[(mixFunction/@(epidemicData[[2,All,#]][[All,i]]//Transpose))&/\
+@Range[epochs],{i,1,epidemicData[[1,All,1]][[1]]//Length}];
+\t\tminC=Table[(Min/@(epidemicData[[2,All,#]][[All,i]]//Transpose))&/@Range[\
+epochs],{i,1,epidemicData[[1,All,1]][[1]]//Length}];
+\t\t{{minI//Transpose,minC//Transpose},{meanI//Transpose,meanC//Transpose},{\
+maxI//Transpose,maxC//Transpose}}
+\t,{j,1,contactsMatrixEpidemic//Length}]//mixFunction
+]
+ListPlotRepeatOnIndexes[epidemicData_,epidemicType_]:=Show[Table[\
+ListPlotEpidemic[epidemicData[[i]],epidemicType,Joined->True,Thickness->If[i==\
+2,.0075,.001]],{i,1,3}]][[1,1,1]]
+MatrixPlotRepeatOnIndexes[epidemicData_,epidemicType_]:=MatrixPlotEpidemic[{(\
+epidemicData[[All,1]]//Mean),(epidemicData[[All,2]]//Mean)},epidemicType]
+Summary[epidemicData_,epidemicMatrix_,epidemicType_]:=Module[{listPlot,\
+matrixPlot,graph},
+\tlistPlot=ListPlotEpidemic[epidemicData,epidemicType,Joined->True];
+\tmatrixPlot=MatrixPlotEpidemic[epidemicData,epidemicType];
+\tgraph=GraphEpidemicProcess[epidemicData,epidemicMatrix[[1]],epidemicType]//\
+Last;
+\tGrid[{{\"Development\",Grid[{{listPlot,matrixPlot}}]},{\"Graph\",graph}},\
+Frame->All,Background->{{LightBlue},None}]
+]
+NetworkEpidemicListEpochs[thresholds_,infectionProb_,contactsMatrixEpidemic_,\
+indexesCases_,epochs_,epidemicType_]:=Module[{},
+\tSwitch[epidemicType,
+\t\t\"SIS\",SISNetworkEpidemicListEpochs[thresholds,infectionProb,\
+contactsMatrixEpidemic,indexesCases,epochs],
+\t\t\"SIR\",SIRNetworkEpidemicListEpochs[thresholds,infectionProb,\
+contactsMatrixEpidemic,indexesCases,epochs],
+\t\t\"SEIR\",SEIRNetworkEpidemicListEpochs[thresholds,infectionProb,\
+contactsMatrixEpidemic,indexesCases,epochs],
+\t\t\"SCEIR\",SCEIRNetworkEpidemicListEpochs[thresholds,infectionProb,\
+contactsMatrixEpidemic,indexesCases,epochs]
+\t]
+]
+GenerateListPlotLists[epidemicData_,epidemicType_]:=Module[{},
+\tSwitch[epidemicType,
+\t\t\"SIS\",SISGenerateListPlotLists[epidemicData[[1]]],
+\t\t\"SIR\",SIRGenerateListPlotLists[epidemicData[[1]]],
+\t\t\"SEIR\",SEIRGenerateListPlotLists[epidemicData[[1]]],
+\t\t\"SCEIR\",SCEIRGenerateListPlotLists[epidemicData[[1]]]
+\t]
+]
+Options[ListPlotEpidemic]:={Joined->True,Thickness->.005}
+ListPlotEpidemic[epidemicData_,epidemicType_,OptionsPattern[]]:=Module[{\
+listPlotData},
+\tlistPlotData=GenerateListPlotLists[epidemicData,epidemicType];
+\tSwitch[epidemicType,
+\t\t\"SIS\",ListPlot[listPlotData,Joined->OptionValue[Joined],PlotStyle->{{\
+PointSize[.0075],Thickness->OptionValue[Thickness]}},InterpolationOrder->2,\
+PlotRange->{0,(epidemicData[[1,1,1]]//Length)+Ceiling[(epidemicData[[1,1,1]]//\
+Length)*.25]},PlotLegends->{\"Suceptible\",\"Infected\"}],
+\t\t\"SIR\",ListPlot[listPlotData,Joined->OptionValue[Joined],PlotStyle->{{\
+PointSize[.0075],Thickness->OptionValue[Thickness]}},InterpolationOrder->2,\
+PlotRange->{0,(epidemicData[[1,1,1]]//Length)+Ceiling[(epidemicData[[1,1,1]]//\
+Length)*.25]},PlotLegends->{\"Suceptible\",\"Infected\",\"Recovered\"}],
+\t\t\"SEIR\",ListPlot[listPlotData,Joined->OptionValue[Joined],PlotStyle->{{\
+PointSize[.0075],Thickness->OptionValue[Thickness]}},InterpolationOrder->2,\
+PlotRange->{0,(epidemicData[[1,1,1]]//Length)+Ceiling[(epidemicData[[1,1,1]]//\
+Length)*.25]},PlotLegends->{\"Suceptible\",\"Exposed\",\"Infected\",\"\
+Recovered\"}],
+\t\t\"SCEIR\",ListPlot[listPlotData,Joined->OptionValue[Joined],PlotStyle->{{\
+PointSize[.0075],Thickness->OptionValue[Thickness]}},InterpolationOrder->2,\
+PlotRange->{0,(epidemicData[[1,1,1]]//Length)+Ceiling[(epidemicData[[1,1,1]]//\
+Length)*.25]},PlotLegends->{\"Suceptible\",\"Condemned\",\"Exposed\",\"\
+Infected\",\"Recovered\"}]
+\t]
+]
+GenerateMatrixPlotMatrix[epidemicData_,epidemicType_]:=Module[{},
+\tSwitch[epidemicType,
+\t\t\"SIS\",SISGenerateMatrixPlotMatrices[epidemicData],
+\t\t\"SIR\",SIRGenerateMatrixPlotMatrices[epidemicData],
+\t\t\"SEIR\",SEIRGenerateMatrixPlotMatrices[epidemicData],
+\t\t\"SCEIR\",SCEIRGenerateMatrixPlotMatrices[epidemicData]
+\t]
+]
+MatrixPlotEpidemic[epidemicData_,epidemicType_]:=Module[{},
+\tMatrixPlot[GenerateMatrixPlotMatrix[epidemicData,epidemicType], PlotTheme->\
+\"Scientific\",ColorFunction->\"TemperatureMap\"]
+]
+GraphEpidemicProcess[epidemicData_,contactsMatrix_,epidemicType_]:=Module[{},
+\tSwitch[epidemicType,
+\t\t\"SIS\",SISGraphEpidemicProcess[contactsMatrix,epidemicData,ImageSize->\
+400,VertexSize->2,EdgeShapeFunction->edgesShape,LineThickness->.001,\
+GraphLayout->Automatic,VertexLabelStyle->.0001],
+\t\t\"SIR\",SIRGraphEpidemicProcess[contactsMatrix,epidemicData,ImageSize->\
+400,VertexSize->2,EdgeShapeFunction->edgesShape,LineThickness->.001,\
+GraphLayout->Automatic,VertexLabelStyle->.0001],
+\t\t\"SEIR\",SEIRGraphEpidemicProcess[contactsMatrix,epidemicData,ImageSize->\
+400,VertexSize->2,EdgeShapeFunction->edgesShape,LineThickness->.001,\
+GraphLayout->Automatic,VertexLabelStyle->.0001],
+\t\t\"SCEIR\",SCEIRGraphEpidemicProcess[contactsMatrix,epidemicData,ImageSize-\
+>400,VertexSize->2,EdgeShapeFunction->edgesShape,LineThickness->.001,\
+GraphLayout->Automatic,VertexLabelStyle->.0001]
+\t]
+]
+Options[ListPlotEpidemicProcess]:={Joined->True,Thickness->.005,ImageSize->500}
+ListPlotEpidemicProcess[epidemicData_,epidemicType_,OptionsPattern[]]:=Module[\
+{},
+\tSwitch[epidemicType,
+\t\t\"SIS\",SISListPlotEpidemicProcess[epidemicData,epidemicData[[1]]//Length,\
+ImageSize->300,InterpolationOrder->0],
+\t\t\"SIR\",SIRListPlotEpidemicProcess[epidemicData,epidemicData[[1]]//Length,\
+ImageSize->300,InterpolationOrder->0],
+\t\t\"SEIR\",SEIRListPlotEpidemicProcess[epidemicData,epidemicData[[1]]//\
+Length,ImageSize->300,InterpolationOrder->0],
+\t\t\"SCEIR\",SCEIRListPlotEpidemicProcess[epidemicData,epidemicData[[1]]//\
+Length,ImageSize->300,InterpolationOrder->0]
+\t]
+]
+MatrixPlotEpidemicProcess[epidemicData_,epidemicType_]:=Table[MatrixPlot[\
+epidemicData[[1,i]],FrameTicks->None],{i,1,epidemicData[[1]]//Length}]
+End[]
+EndPackage[]
+\
+\>", "Input",
+ CellChangeTimes->{{3.676662315292997*^9, 3.676662328998695*^9}, {
+   3.676662549337667*^9, 3.676662560828353*^9}, {3.676662931351475*^9, 
+   3.6766630360020533`*^9}, {3.6766630690408688`*^9, 
+   3.6766630721627607`*^9}, {3.676663125227942*^9, 3.676663128520842*^9}, {
+   3.676664492778719*^9, 3.676664519347267*^9}, {3.6766645787462387`*^9, 
+   3.676664604114769*^9}, {3.67671752178014*^9, 3.6767175250386972`*^9}, {
+   3.676717581468762*^9, 3.676717594416916*^9}, {3.676717646164287*^9, 
+   3.676717654445356*^9}, {3.676717728431731*^9, 3.676717739859223*^9}, 
+   3.676717771691986*^9, {3.676717835581773*^9, 3.676717848963929*^9}, {
+   3.676717990060915*^9, 3.6767179908596163`*^9}, {3.676718062354459*^9, 
+   3.676718068224935*^9}, {3.6767181672106457`*^9, 3.67671820835732*^9}, {
+   3.6767183211802464`*^9, 3.676718346638274*^9}, {3.676718392906108*^9, 
+   3.6767184271441174`*^9}, {3.676718495690558*^9, 3.676718509739122*^9}, {
+   3.676719425495104*^9, 3.676719434934808*^9}, 3.6768250484052353`*^9, {
+   3.6768251461106043`*^9, 3.676825146402046*^9}, {3.676825249433693*^9, 
+   3.676825263810854*^9}}],
+
+Cell[BoxData["\<\"EpiSoNA`\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.6769199669307613`*^9}],
+
+Cell[BoxData["\<\"Default style parameters for graphs edges\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.6769199669483843`*^9}],
+
+Cell[BoxData["\<\"Converts a vertex number to a label\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919966964033*^9}],
+
+Cell[BoxData["\<\"Generates a graph with the edges corresponding to \
+transition frequencies between phrases and the vertices to the phrases\"\>"], \
+"Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919966979382*^9}],
+
+Cell[BoxData["\<\"Generates a transitions graph which colors are scaled to \
+the value entered as MAX (used for processes that change with time \
+(manipulates))\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919966999769*^9}],
+
+Cell[BoxData["\<\"Generates the edges style list of a graph\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919967014763*^9}],
+
+Cell[BoxData["\<\"Returns the initialized state vectors with the given \
+indexes cases\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919967030055*^9}],
+
+Cell[BoxData["\<\"Returns the initialized count vectors with zero values for \
+each of them\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.6769199670473022`*^9}],
+
+Cell[BoxData["\<\"Initializes both vectors\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919967216963*^9}],
+
+Cell[BoxData["\<\"Updates the counters for each of the individuals in each \
+state\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919967246798*^9}],
+
+Cell[BoxData["\<\"Returns the positions of the individuals that should make a \
+transition given a state and threshold for counter\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919967265308*^9}],
+
+Cell[BoxData["\<\"Returns the bool values of the probabilities of an \
+individual infecting the others without taking into account if the individual \
+is himself in Infected state\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.6769199672810307`*^9}],
+
+Cell[BoxData["\<\"Returns the matrix of the individuals being infected \
+(columns) by others (rows)\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919967297373*^9}],
+
+Cell[BoxData["\<\"Returns the updated population vector with the replaced \
+condemned individuals\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.6769199673111353`*^9}],
+
+Cell[BoxData["\<\"Spreads the disease between contacts probabilistically \
+according to their contacts matrices\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.6769199673261766`*^9}],
+
+Cell[BoxData["\<\"Spread a disease through one epoch between the population \
+in a network\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.6769199673421497`*^9}],
+
+Cell[BoxData["\<\"Spreads a disease in a network returning the persons and \
+counter vectors for each epoch\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919967356565*^9}],
+
+Cell[BoxData["\<\"Spread a disease in a network returning the persons and \
+counter vectors for the last epoch\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919967370451*^9}],
+
+Cell[BoxData["\<\"Returns the epidemic process lists so that they can be \
+plotted\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.6769199673859043`*^9}],
+
+Cell[BoxData["\<\"Generates a graph of each step of the epidemic \
+process\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919967400898*^9}],
+
+Cell[BoxData["\<\"Generates a list plot of each step of the epidemic \
+process\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919967414997*^9}],
+
+Cell[BoxData["\<\"Generates a Matrix Plot representation of each of the \
+states in the epidemic process\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.6769199674325247`*^9}],
+
+Cell[BoxData["\<\"Generates a full condensed matrix for a matrix plot of the \
+epidemic process\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919967447493*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.67691996746145*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.67691996747519*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919967489637*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919967504071*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.6769199675179873`*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919967532155*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919967548377*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919967562442*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919967576206*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.6769199677629423`*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919967786859*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.6769199678019257`*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919967818194*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919967836076*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.6769199678510447`*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.6769199678651342`*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.6769199678789387`*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919967894763*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919967909212*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919967928067*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919967944933*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919967960217*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919967974156*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919967992498*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919968005834*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.6769199680221663`*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919968037088*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919968050543*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919968064918*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919968078569*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.6769199680934687`*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.67691996810783*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.6769199681720533`*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919968200609*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919968216209*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.6769199682308807`*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919968245111*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919968259686*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919968274745*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919968288641*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.67691996830464*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.6769199683206367`*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.6769199683357973`*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919968354157*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.6769199683682632`*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919968384694*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919968400113*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.6769199684164457`*^9}],
+
+Cell[BoxData["\<\"Repeats an epidemic process a given number of times with a \
+single set of initial infected individuals\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919968434538*^9}],
+
+Cell[BoxData["\<\"Repeats an epidemic process a given number of times \
+starting from each individual on the population\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919968449505*^9}],
+
+Cell[BoxData["\<\"Generates a list plot from the data resulting of a sweep on \
+the epidemic population\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919968463439*^9}],
+
+Cell[BoxData["\<\"Generates a matrix plot from the data resulting of a sweep \
+on the epidemic population\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919968481449*^9}],
+
+Cell[BoxData["\<\"\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919968495421*^9}],
+
+Cell[BoxData["\<\"Simulates an epidemic returning the stages of the process\"\
+\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.6769199685091953`*^9}],
+
+Cell[BoxData["\<\"Generates the list plots lists of the process\"\>"], \
+"Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919968522811*^9}],
+
+Cell[BoxData["\<\"Generates the final list plot of the process\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919972590764*^9}],
+
+Cell[BoxData["\<\"Generates the final matrix of the process\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919972645955*^9}],
+
+Cell[BoxData["\<\"Generates the final matrix plot\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.6769199726595793`*^9}],
+
+Cell[BoxData["\<\"Generates the graphs of each stage of the epidemic \
+process\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919972673526*^9}],
+
+Cell[BoxData["\<\"List plots an epidemic process in each stage\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919972687538*^9}],
+
+Cell[BoxData["\<\"Generates the matrix plots at each stage of the \
+process\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.6769199727019444`*^9}],
+
+Cell[BoxData["\<\"EpiSoNA`Private`\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.676919972716106*^9}],
+
+Cell[BoxData["\<\"EpiSoNA`Private`\"\>"], "Output",
+ CellChangeTimes->{
+  3.676662262850205*^9, 3.6766623323648577`*^9, 3.676662570311041*^9, 
+   3.6766629684643507`*^9, 3.676663041498514*^9, {3.6766630737446213`*^9, 
+   3.676663088959921*^9}, 3.6766644700602493`*^9, 3.676664519906515*^9, {
+   3.676664580363386*^9, 3.676664605680771*^9}, 3.6767165397787046`*^9, 
+   3.676717525916184*^9, 3.676717654684494*^9, 3.676717741965741*^9, 
+   3.6767177722226143`*^9, 3.67671784937822*^9, 3.676717991173966*^9, 
+   3.676718075156521*^9, {3.6767181807067823`*^9, 3.676718209691681*^9}, {
+   3.676718334995356*^9, 3.6767183516262493`*^9}, {3.6767183991323843`*^9, 
+   3.676718427412696*^9}, {3.676718496099916*^9, 3.676718510079855*^9}, {
+   3.67671942947759*^9, 3.676719435288719*^9}, 3.676824199390992*^9, 
+   3.676825048799642*^9, 3.676825146982197*^9, {3.67682525006182*^9, 
+   3.676825265924391*^9}, 3.6769156449530363`*^9, 3.6769160081654663`*^9, 
+   3.6769199727304277`*^9}]
+}, Open  ]]
+},
+WindowSize->{1038, 724},
+WindowMargins->{{Automatic, 138}, {Automatic, 10}},
+FrontEndVersion->"10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (February 25, \
+2016)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[422, 15, 49193, 938, 8774, "Input"],
+Cell[49618, 955, 965, 14, 28, "Output"],
+Cell[50586, 971, 998, 14, 28, "Output"],
+Cell[51587, 987, 990, 14, 28, "Output"],
+Cell[52580, 1003, 1079, 16, 46, "Output"],
+Cell[53662, 1021, 1097, 16, 46, "Output"],
+Cell[54762, 1039, 996, 14, 28, "Output"],
+Cell[55761, 1055, 1023, 15, 28, "Output"],
+Cell[56787, 1072, 1030, 15, 28, "Output"],
+Cell[57820, 1089, 979, 14, 28, "Output"],
+Cell[58802, 1105, 1019, 15, 28, "Output"],
+Cell[59824, 1122, 1067, 15, 28, "Output"],
+Cell[60894, 1139, 1118, 16, 46, "Output"],
+Cell[62015, 1157, 1036, 15, 28, "Output"],
+Cell[63054, 1174, 1036, 15, 28, "Output"],
+Cell[64093, 1191, 1050, 15, 28, "Output"],
+Cell[65146, 1208, 1029, 15, 28, "Output"],
+Cell[66178, 1225, 1044, 15, 28, "Output"],
+Cell[67225, 1242, 1047, 15, 28, "Output"],
+Cell[68275, 1259, 1021, 15, 28, "Output"],
+Cell[69299, 1276, 1011, 15, 28, "Output"],
+Cell[70313, 1293, 1015, 15, 28, "Output"],
+Cell[71331, 1310, 1043, 15, 28, "Output"],
+Cell[72377, 1327, 1032, 15, 28, "Output"],
+Cell[73412, 1344, 954, 14, 28, "Output"],
+Cell[74369, 1360, 954, 14, 28, "Output"],
+Cell[75326, 1376, 955, 14, 28, "Output"],
+Cell[76284, 1392, 955, 14, 28, "Output"],
+Cell[77242, 1408, 957, 14, 28, "Output"],
+Cell[78202, 1424, 955, 14, 28, "Output"],
+Cell[79160, 1440, 955, 14, 28, "Output"],
+Cell[80118, 1456, 955, 14, 28, "Output"],
+Cell[81076, 1472, 955, 14, 28, "Output"],
+Cell[82034, 1488, 957, 14, 28, "Output"],
+Cell[82994, 1504, 955, 14, 28, "Output"],
+Cell[83952, 1520, 957, 14, 28, "Output"],
+Cell[84912, 1536, 955, 14, 28, "Output"],
+Cell[85870, 1552, 955, 14, 28, "Output"],
+Cell[86828, 1568, 957, 14, 28, "Output"],
+Cell[87788, 1584, 957, 14, 28, "Output"],
+Cell[88748, 1600, 957, 14, 28, "Output"],
+Cell[89708, 1616, 955, 14, 28, "Output"],
+Cell[90666, 1632, 955, 14, 28, "Output"],
+Cell[91624, 1648, 955, 14, 28, "Output"],
+Cell[92582, 1664, 955, 14, 28, "Output"],
+Cell[93540, 1680, 955, 14, 28, "Output"],
+Cell[94498, 1696, 955, 14, 28, "Output"],
+Cell[95456, 1712, 955, 14, 28, "Output"],
+Cell[96414, 1728, 955, 14, 28, "Output"],
+Cell[97372, 1744, 957, 14, 28, "Output"],
+Cell[98332, 1760, 955, 14, 28, "Output"],
+Cell[99290, 1776, 955, 14, 28, "Output"],
+Cell[100248, 1792, 955, 14, 28, "Output"],
+Cell[101206, 1808, 955, 14, 28, "Output"],
+Cell[102164, 1824, 957, 14, 28, "Output"],
+Cell[103124, 1840, 954, 14, 28, "Output"],
+Cell[104081, 1856, 957, 14, 28, "Output"],
+Cell[105041, 1872, 955, 14, 28, "Output"],
+Cell[105999, 1888, 955, 14, 28, "Output"],
+Cell[106957, 1904, 957, 14, 28, "Output"],
+Cell[107917, 1920, 955, 14, 28, "Output"],
+Cell[108875, 1936, 955, 14, 28, "Output"],
+Cell[109833, 1952, 955, 14, 28, "Output"],
+Cell[110791, 1968, 955, 14, 28, "Output"],
+Cell[111749, 1984, 954, 14, 28, "Output"],
+Cell[112706, 2000, 957, 14, 28, "Output"],
+Cell[113666, 2016, 957, 14, 28, "Output"],
+Cell[114626, 2032, 955, 14, 28, "Output"],
+Cell[115584, 2048, 957, 14, 28, "Output"],
+Cell[116544, 2064, 955, 14, 28, "Output"],
+Cell[117502, 2080, 955, 14, 28, "Output"],
+Cell[118460, 2096, 957, 14, 28, "Output"],
+Cell[119420, 2112, 1058, 15, 28, "Output"],
+Cell[120481, 2129, 1056, 15, 28, "Output"],
+Cell[121540, 2146, 1040, 15, 28, "Output"],
+Cell[122583, 2163, 1042, 15, 28, "Output"],
+Cell[123628, 2180, 955, 14, 28, "Output"],
+Cell[124586, 2196, 1016, 15, 28, "Output"],
+Cell[125605, 2213, 1002, 15, 28, "Output"],
+Cell[126610, 2230, 999, 14, 28, "Output"],
+Cell[127612, 2246, 996, 14, 28, "Output"],
+Cell[128611, 2262, 988, 14, 28, "Output"],
+Cell[129602, 2278, 1015, 15, 28, "Output"],
+Cell[130620, 2295, 999, 14, 28, "Output"],
+Cell[131622, 2311, 1014, 15, 28, "Output"],
+Cell[132639, 2328, 971, 14, 28, "Output"],
+Cell[133613, 2344, 973, 14, 28, "Output"]
+}, Open  ]]
+}
+]
+*)
+

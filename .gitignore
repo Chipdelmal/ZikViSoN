@@ -1,0 +1,10 @@
+.DS_Store
+*.Rhistory
+.Rhistory
+.dropbox
+*Icon*
+.Rapp.history
+*.png
+*.mov
+*.avi
+.Rproj.user

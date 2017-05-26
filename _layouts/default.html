@@ -1,27 +1,19 @@
+---
+---
 <!DOCTYPE html>
-<html class="no-js">
+<html lang="en">
   <head>
-
-    {% include head.html %}
-
+    {% include header.html %}
   </head>
   <body>
-
-
-    {% include header.html %}
-
-
-    {{ content }}
-
-
-
-
-
-
-
-
-
-    {% include footer.html %}
-
-    </body>
+    <div class="nav-toggle"><i class="fa fa-bars fa-2x"></i>ZikViSoN</div>
+    <div id = "wrapper">
+      {%include navigation.html %}
+      <div class="container">
+        {{ content }}
+      </div>
+      {% include footer.html %}
+    </div>
+    {% include scripts.html %}
+  </body>
 </html>

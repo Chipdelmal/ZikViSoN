@@ -1,44 +1,23 @@
-This repository is no longer maintained. 
-============
+# Introduction
 
-Herring Cove
-============
+The way humans connect to each other epidemiologically shapes the way diseases spread amongst them. This is because it makes easier or harder for pathogens to “jump” from host to host and continue their path of infection. This is why, our project focuses on trying to obtain and analyse human connections to try to infer the way Zika would spread in a given population and how we would better approach its eradication.
 
-Herring Cove is a clean and responsive theme for Jekyll. 
+# Research Lines
 
+Being a large-scale project, this code is divided into three main lines of research that allow a certain level of independence amongst them.
 
-### Overview 
+## Individual-Based Model
 
-* Fixed Sidebar with social links
-* Minimal design 
-* Comments by Disqus
-* Social Sharing abilities 
-* Easy to configure
-* Based on Bootstrap
+A testbed for the analysis and experimentation of the changes in epidemiological networks that ocurr through mosquito bites in human populations.
 
-### Screenshots
+## Networks Epidemics Framework
 
-![screenshot](/images/screenshot1.png)
-![screenshot](/images/screenshot2.png)
+Algorithms to perform simulations on pathogens' spread in networks.
 
-### Setup
+## Twitter Network Parser
 
-1. Install Jekyll
-2. Fork or [download](https://github.com/arnp/herring-cove/archive/master.zip) this theme repo
-3. Edit the `_config.yml` file
+Scripts to obtain and reconstruct twitter's networks.
 
-You can change the showcase image by replacing `showcase.jpg` file in the `images` folder. I'll try to find a better way to do this soon. 
+# More information
 
-### Download
-
-[download](https://github.com/arnp/herring-cove/archive/master.zip)
-
-### License
-* [MIT](http://opensource.org/licenses/MIT)
-
--------------
-Herring Cove is always a work in progress and as such, I hope to clean up the code and add features as time permits. Feel free to add your own additions. 
-
-*What's with the name?*
-
-[Herring Cove](http://www.capecodbeachchair.com/beachguide/index.cfm?page=3&BeachID=5) is a beach on Cape Cod in Provincetown, Massachusetts. If you're in the area, be sure to check it out!
+For more information on our project please visit our <a href="https://chipdelmal.github.io/ZikViSoN/">website</a>.

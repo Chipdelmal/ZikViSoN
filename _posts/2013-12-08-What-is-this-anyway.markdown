@@ -20,17 +20,19 @@ As it was mentioned before, the way humans connect to each other modifies the wa
 <br>
 
 <center>
-<a href="https://chipdelmal.github.io/ZikViSoN/sir.html" class="btn btn-default misc-button">Networks Epidemics Framework</a>
+<a href="https://chipdelmal.github.io/ZikViSoN/sir.html" class="btn btn-default misc-button">Networks Epidemics Framework Info</a>
 </center>
 
 ### Social Networks
 
 Social networks have been used in the past to try to predict diseases spread in human populations, although these efforts have usually focused on direct-contact transmitted diseases (such as influenza). In therms of mosquito-borne diseases, we are still developing frameworks that would allow us to understand and anticipate epidemics with this kind of information. This is why one of the main objectives of our project.
 
-<img src="https://chipdelmal.github.io/ZikViSoN/images/Spatial.png" style="width:100%; border-radius:0px">
+<center>
+<img src="https://chipdelmal.github.io/ZikViSoN/images/Spatial.png" style="width:60%; border-radius:0px">
+</center>
 
 <center>
-<a href="https://chipdelmal.github.io/ZikViSoN/twitter.html" class="btn btn-default misc-button">Twitter Parser Framework</a>
+<a href="https://chipdelmal.github.io/ZikViSoN/twitter.html" class="btn btn-default misc-button">Twitter Parser Framework Info</a>
 </center>
 
 ### Agent-Based Model
@@ -40,5 +42,5 @@ Another integral part of our project is the understanding of the micro-dynamics 
 <img src="https://chipdelmal.github.io/ZikViSoN/images/sonabsInterface.png" style="width:100%; border-radius:0px">
 
 <center>
-<a href="https://chipdelmal.github.io/ZikViSoN/SoNABS.html" class="btn btn-default misc-button">SoNA3BS Framework</a>
+<a href="https://chipdelmal.github.io/ZikViSoN/SoNABS.html" class="btn btn-default misc-button">SoNA3BS Framework Info</a>
 </center>

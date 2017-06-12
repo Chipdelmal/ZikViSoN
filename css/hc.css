@@ -69,12 +69,13 @@ p
 {
   width:80%;
   padding-right:0;
-  padding-top:30px
+  padding-top:30px;
+  background-color: #FFFFFF;
 }
 
 .container a
 {
-  border-bottom:1px #8a8a8a dotted;
+
   text-decoration:none
 }
 
@@ -390,6 +391,7 @@ pre
 
 img
 {
+  border-radius: 5px;
   display: inline-block;
   max-width:100%;
 }
@@ -397,7 +399,7 @@ img
 #article
 {
   margin-bottom:30px;
-  background-color:#f9f9f9;
+  background-color:#fff;
   box-shadow:1px 1px 0 1px #e8e8e8;
   padding:10px 40px 0
 }
@@ -651,7 +653,8 @@ time
 
 .misc-button
 {
-  background-color:#9e9599
+  background-color:#f0f0f0;
+  border:solid 2px #000;
 }
 
 .misc:hover
@@ -661,7 +664,7 @@ time
 
 .misc-button:hover
 {
-  background-color:#cfe0ea
+  background-color:#ffffff;
 }
 
 .podcasts

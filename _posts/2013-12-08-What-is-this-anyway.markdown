@@ -31,7 +31,7 @@ Social networks have been used in the past to try to predict diseases spread in 
 
 Another integral part of our project is the understanding of the micro-dynamics of human-mosquito interactions. To this end, we created a computational individual-based model to understand how changes in human behaviour, along with weather and mosquito-control interventions affect the way humans connect to each other epidemiologically.
 
-<img src="https://chipdelmal.github.io/ZikViSoN/images/sonabsInterface" style="width:100%; border-radius:0px">
+<img src="https://chipdelmal.github.io/ZikViSoN/images/sonabsInterface.png" style="width:100%; border-radius:0px">
 
 <center>
 <a href="https://chipdelmal.github.io/ZikViSoN/SoNABS.html" class="btn btn-default misc-button">SoNA3BS Framework</a>
